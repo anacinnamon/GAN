@@ -1,5 +1,8 @@
 from __future__ import print_function, division
 
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+
 from keras.datasets import mnist
 from keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply
 from keras.layers import BatchNormalization, Activation, Embedding, ZeroPadding2D
@@ -166,6 +169,8 @@ class CGAN():
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
+			self.generator.save("models/generator_"+str(epoch)+".h5")
+			self.discriminator.save("models/discriminator_"+str(epoch)+".h5")
 
     def sample_images(self, epoch):
 
@@ -220,4 +225,4 @@ class CGAN():
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=10000, batch_size=32, sample_interval=1000)
+    cgan.train(epochs=1001, batch_size=32, sample_interval=500)
