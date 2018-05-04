@@ -1,6 +1,7 @@
 from __future__ import print_function, division
 
 import os
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 from keras.datasets import mnist
@@ -169,8 +170,8 @@ class CGAN():
             # If at save interval => save generated image samples
             if epoch % sample_interval == 0:
                 self.sample_images(epoch)
-			self.generator.save("models/generator_"+str(epoch)+".h5")
-			self.discriminator.save("models/discriminator_"+str(epoch)+".h5")
+                self.generator.save("saved_model/generator_" + str(epoch) + ".h5")
+                self.discriminator.save("saved_model/discriminator_" + str(epoch) + ".h5")
 
     def sample_images(self, epoch):
 
