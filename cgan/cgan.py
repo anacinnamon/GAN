@@ -28,7 +28,7 @@ class CGAN():
         self.num_classes = 48
         self.latent_dim = 100
 
-        optimizer = Adam(0.0002, 0.5)
+        optimizer = Adam(0.00002, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
@@ -226,4 +226,4 @@ class CGAN():
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=1001, batch_size=32, sample_interval=500)
+    cgan.train(epochs=100001, batch_size=32, sample_interval=10000)
