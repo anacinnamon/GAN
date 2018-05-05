@@ -190,8 +190,8 @@ class CGAN():
         cnt = 0
         for i in range(r):
             for j in range(c):
-                # cv2.imwrite("images/" + str(epoch) + "_" + str(list_labels[int(sampled_labels[cnt])]) + ".png",
-                #             gen_imgs[cnt, :, :, 0] * 256)
+                cv2.imwrite("images/" + str(epoch) + "_" + str(list_labels[int(sampled_labels[cnt])]) + ".png",
+                            gen_imgs[cnt, :, :, 0] * 256)
                 axs[i, j].imshow(gen_imgs[cnt, :, :, 0], cmap='gray')
                 axs[i, j].set_title("char: %d" % sampled_labels[cnt])
                 axs[i, j].axis('off')
@@ -226,4 +226,4 @@ class CGAN():
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=1001, batch_size=32, sample_interval=500)
+    cgan.train(epochs=20001, batch_size=32, sample_interval=2000)
