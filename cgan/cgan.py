@@ -28,7 +28,7 @@ class CGAN():
         self.num_classes = 48
         self.latent_dim = 100
 
-        optimizer = Adam(0.0002, 0.5)
+        optimizer = Adam(0.00002, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
