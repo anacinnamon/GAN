@@ -28,7 +28,7 @@ class CGAN():
         self.num_classes = 48
         self.latent_dim = 100
 
-        optimizer = Adam(0.00002, 0.5)
+        optimizer = Adam(0.0002, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
@@ -38,6 +38,7 @@ class CGAN():
 
         # Build the generator
         self.generator = self.build_generator()
+	self.generator.compile(loss=['binary_crossentropy'],optimizer=optimizer)
 
         # The generator takes noise and the target label as input
         # and generates the corresponding digit of that label
@@ -118,7 +119,7 @@ class CGAN():
 
         # Load the dataset
         # (X_train, y_train), (_, _) = mnist.load_data()
-        (X_train, y_train), (_, _) = self.load_my_data()
+        (X_train, y_train) = self.load_my_data()
 
         # Rescale -1 to 1
         X_train = (X_train.astype(np.float32) - 127.5) / 127.5
@@ -212,12 +213,8 @@ class CGAN():
             list_images.append(ob[0])
             list_labels.append(ob[1])
 
-        n = len(list_images)
         print("load ok")
-        return (np.asarray(list_images[0:int(2 * n / 3)], dtype=np.uint8),
-                np.asarray(list_labels[0:int(2 * n / 3)], dtype=np.uint8)), (
-                   np.asarray(list_images[int(2 * n / 3):n], dtype=np.uint8),
-                   np.asarray(list_labels[int(2 * n / 3):n], dtype=np.uint8))
+        return (np.asarray(list_images, dtype=np.uint8), np.asarray(list_labels, dtype=np.uint8))
 
     def load_label(self):
         list_labels = pickle.load(open("../cinnamon/ETL5_GAN_labels.pkl", "rb"))
@@ -226,4 +223,4 @@ class CGAN():
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=100001, batch_size=32, sample_interval=10000)
+    cgan.train(epochs=20001, batch_size=32, sample_interval=1000)
