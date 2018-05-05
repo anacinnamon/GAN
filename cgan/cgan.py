@@ -28,13 +28,12 @@ class CGAN():
         self.num_classes = 48
         self.latent_dim = 100
 
-        optimizer = Adam(0.00002, 0.5)
+        optimizer = Adam(0.0002, 0.5)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
         self.discriminator.compile(loss=['binary_crossentropy'],
-                                   optimizer=optimizer,
-                                   metrics=['accuracy'])
+                                   optimizer=optimizer, metrics=['accuracy'])
 
         # Build the generator
         self.generator = self.build_generator()
@@ -190,8 +189,8 @@ class CGAN():
         cnt = 0
         for i in range(r):
             for j in range(c):
-                cv2.imwrite("images/" + str(epoch) + "_" + str(list_labels[int(sampled_labels[cnt])]) + ".png",
-                            gen_imgs[cnt, :, :, 0] * 256)
+                # cv2.imwrite("images/" + str(epoch) + "_" + str(list_labels[int(sampled_labels[cnt])]) + ".png",
+                #             gen_imgs[cnt, :, :, 0] * 256)
                 axs[i, j].imshow(gen_imgs[cnt, :, :, 0], cmap='gray')
                 axs[i, j].set_title("char: %d" % sampled_labels[cnt])
                 axs[i, j].axis('off')
@@ -212,12 +211,11 @@ class CGAN():
             list_images.append(ob[0])
             list_labels.append(ob[1])
 
-        n = len(list_images)
         print("load ok")
-        return (np.asarray(list_images[0:int(2 * n / 3)], dtype=np.uint8),
-                np.asarray(list_labels[0:int(2 * n / 3)], dtype=np.uint8)), (
-                   np.asarray(list_images[int(2 * n / 3):n], dtype=np.uint8),
-                   np.asarray(list_labels[int(2 * n / 3):n], dtype=np.uint8))
+        return (np.asarray(list_images, dtype=np.uint8),
+                np.asarray(list_labels, dtype=np.uint8)), (
+                   np.asarray(list_images[0:1], dtype=np.uint8),
+                   np.asarray(list_labels[0:1], dtype=np.uint8))
 
     def load_label(self):
         list_labels = pickle.load(open("../cinnamon/ETL5_GAN_labels.pkl", "rb"))
@@ -226,4 +224,4 @@ class CGAN():
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=20001, batch_size=32, sample_interval=2000)
+    cgan.train(epochs=1000001, batch_size=32, sample_interval=50000)
