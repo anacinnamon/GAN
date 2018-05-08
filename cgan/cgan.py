@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 import cv2
+from keras.models import load_model
 
 
 class CGAN():
@@ -25,7 +26,7 @@ class CGAN():
         self.img_cols = 28
         self.channels = 1
         self.img_shape = (self.img_rows, self.img_cols, self.channels)
-        self.num_classes = 48
+        self.num_classes = 956
         self.latent_dim = 100
 
         optimizer = Adam(0.0002, 0.5)
@@ -158,7 +159,7 @@ class CGAN():
             valid = np.ones((batch_size, 1))
             # Generator wants discriminator to label the generated images as the intended
             # digits
-            sampled_labels = np.random.randint(0, 48, batch_size).reshape(-1, 1)
+            sampled_labels = np.random.randint(0, self.num_classes, batch_size).reshape(-1, 1)
 
             # Train the generator
             g_loss = self.combined.train_on_batch([noise, sampled_labels], valid)
@@ -199,7 +200,7 @@ class CGAN():
         plt.close()
 
     def load_my_data(self):
-        list_objects = pickle.load(open("../cinnamon/ETL5_GAN.pkl", "rb"))
+        list_objects = pickle.load(open("../cinnamon/ETL8G_GAN.pkl", "rb"))
 
         np.random.shuffle(list_objects)
 
@@ -218,10 +219,42 @@ class CGAN():
                    np.asarray(list_labels[0:1], dtype=np.uint8))
 
     def load_label(self):
-        list_labels = pickle.load(open("../cinnamon/ETL5_GAN_labels.pkl", "rb"))
+        list_labels = pickle.load(open("../cinnamon/ETL8G_GAN_labels.pkl", "rb"))
         return list_labels
+
+    # def gen_images(self, num_gen):
+    #
+    #     list_labels = self.load_label()
+    #     self.generator.load_weights('saved_model/generator_1000000.h5')
+    #
+    #     for num in range(num_gen):
+    #
+    #         r, c = 8, 6
+    #         noise = np.random.normal(0, 1, (r * c, 100))
+    #         sampled_labels = np.arange(0, 48).reshape(-1, 1)
+    #
+    #         gen_imgs = self.generator.predict([noise, sampled_labels])
+    #
+    #         # Rescale images 0 - 1
+    #         gen_imgs = 0.5 * gen_imgs + 0.5
+    #
+    #         fig, axs = plt.subplots(r, c)
+    #         cnt = 0
+    #         for i in range(r):
+    #             for j in range(c):
+    #                 cv2.imwrite(
+    #                     "gen_images/" + str(int(sampled_labels[cnt])) + "_" + str(
+    #                         list_labels[int(sampled_labels[cnt])]) + "_" + str(num) + ".png",
+    #                     256 - gen_imgs[cnt, :, :, 0] * 256)
+    #                 axs[i, j].imshow(gen_imgs[cnt, :, :, 0], cmap='gray')
+    #                 axs[i, j].set_title("char: %d" % sampled_labels[cnt])
+    #                 axs[i, j].axis('off')
+    #                 cnt += 1
+    #         fig.savefig("gen_images/%d.png" % num)
+    #         # plt.close()
 
 
 if __name__ == '__main__':
     cgan = CGAN()
-    cgan.train(epochs=1000001, batch_size=32, sample_interval=50000)
+    cgan.train(epochs=100001, batch_size=32, sample_interval=5000)
+    # cgan.gen_images(10)
